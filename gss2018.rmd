@@ -1,6 +1,6 @@
 ---
 title: "General Social Survey"
-author: "Your Name"
+author: "Rachelle Galindo"
 date: "Year 2019"
 output: 
   html_document:
@@ -26,17 +26,11 @@ mydata2 <-filter(mydata,RACE!="IAP" ) %>% droplevels()
 mydata3 <- filter(mydata2,BIGBANG=="True" | BIGBANG=="False",EVOLVED=="True"|EVOLVED=="False",POSTLIFE=="YES"|POSTLIFE=="NO",OWNGUN=="YES"|OWNGUN=="NO",COURTS=="TOO HARSH"|COURTS=="NOT HARSH ENOUGH"|COURTS=="ABOUT RIGHT") %>% droplevels()
 mydata4 <- filter(mydata3,CAPPUN=="FAVOR"|CAPPUN=="OPPOSE",VOTE12=="Voted"|VOTE12=="Did not vote",VOTE16=="Voted"|VOTE16=="Did not vote") %>% droplevels()
 levels(mydata4$VOTE12)[1] <- "voted12"
-levels(mydata4$VOTE12)[2] <- "no in 12"
+levels(mydata4$VOTE12)[2] <- "did not vote 12"
 
 ```
 
 
-```{r}
-barchartGC(~VOTE16+VOTE12, data=mydata4, type = "percent") 
-chisqtestGC(~VOTE16+VOTE12, data=mydata4)
-votetab=xtabs(~VOTE16+VOTE12, data=mydata4)
-fisher.test(votetab)
-```
 
 # Introduction Question 1
 
@@ -45,27 +39,54 @@ fisher.test(votetab)
 This data is from the 2018 General Social Survey. The first blocks of R-code has selected down a subset of the data to just 15 variables. It has further removed unwanted factor levels in much of the data. Examine that code to see what it is doing. First explain what you make out of comparing how people voted in 2012 with 2016.
 
 
+How are the "voted in 2016" and "voted in 2012" related? 
+$H_0:$  voting in 2016 and 2012 is unrelated 
+Among the people who voted, the amount of people who did vote in 2012 was only 90% and there was a 80% of people who didn't vote in 2016. People who voted in 2012, only 20% of them didnt vote in the year 2016. 
+
 ## Methods
 
 <!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method.!-->
 
+We are comparing how the people voted so we use categorical variables,and a chi-squared test to test the hypothesis that voting in 2016 is/is not independent of voting in 2012.
+
 ##Results
 
-<!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
+<!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->The null hypothesis is unrelated so we reject the null hypothesis 
+
 
 ### Descriptive Results
+
+we use a barchart to show the voting trends between 2012 and 2016
+
 
 #### Graphical Descriptive Results
 
 <!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question!-->
+```{r}
+barchartGC(~VOTE16+VOTE12, data=mydata4, type = "percent")
 
+```
+The bar chart shows that the people who voted in 2012 were not likely to vote in 2016 and the people who didn't voted in 2012 were more likely to vote in 2016.
 #### Numerical Descriptive Results
 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
+Numerical summary is a cross tabulation:
+
+```{r}
+xtabs(~VOTE16+VOTE12, data=mydata4)
+```
+
 ### Inferential Results
 
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
+
+```{r}
+chisqtestGC(~VOTE16+VOTE12, data=mydata4)
+votetab=xtabs(~VOTE16+VOTE12, data=mydata4)
+fisher.test(votetab)
+```
+The hypothesis was that voting in 2012 is related to voting in 2016. we reject the null hypothesis because we have evidence and the p value is 0. is you voted in 2012 you are likely to vote in 2016 and if you didn't vote in 2012 you are not likely to vote in 2016
 
 # Introduction Question 2
 
@@ -73,27 +94,59 @@ This data is from the 2018 General Social Survey. The first blocks of R-code has
 
 Now answer Is belief in the bigbang theory (BIGBANG) independent of belief in the afterlife (POSTLIFE)
 
+Do people who believe in the big bang theory beleive in postlife?
+$H_0:$  believers in postlife is related
+
+
 ## Methods
 
 <!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method.!-->
+
+We are comparing the people who beleive in big bang and the people who believe in postlife so we use categorical variables,and a chi-squared test to test the hypothesis that they are independent.
 
 ##Results
 
 <!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
 
+The null hypothesis is related so we don't reject the null hypothesis 
+
 ### Descriptive Results
+
+we use a barchart to show the difference between the people who believe in postlife and the people who don't.
 
 #### Graphical Descriptive Results
 
 <!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
+```{r}
+barchartGC(~BIGBANG+POSTLIFE, data=mydata3, type = "percent",xlab='BELIEVE IN POSTLIFE',main='BELEIVE IN BIGBANG')
+
+```
+The barchart shows that about 78% of the people who believe in postlife 
+
+
 #### Numerical Descriptive Results
 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
+Numerical summary is a cross tabulation:
+
+```{r}
+xtabs(~BIGBANG+POSTLIFE, data=mydata3)
+```
+86 says yes they do believe in postlife anf 109 say that they don't believe in postlife.
+
 ### Inferential Results
 
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
+
+We don't reject the null hypothesis
+```{r}
+chisqtestGC(~BIGBANG+POSTLIFE, data=mydata3)
+votetab=xtabs(~BIGBANG+POSTLIFE, data=mydata3)
+fisher.test(votetab)
+```
+Do people who believe in the big bang theory believe in the postlife. The null hypothesis is that they are independent and there is no relation. The alternative hypothesis is that they are related. So we don't reject the null hypothesis.
 
 # Introduction Question 3
 
@@ -105,26 +158,55 @@ This time compare the opinion on death penalty (CAPPUN) with opinion on courts (
 
 <!--Decide on your methods:  use "variable analysis" or other appropriate descriptors.  Make sure to choose at least one graphical method and at least one numerical method.!-->
 
+We are comparing whether or not capital punishment and the court think it's harsh, not enough, or just about right to put on the dealth penalty for priosners,so we use categorical variables,and a chi-squared test to test the hypothesis that they are independent.
+
 ##Results
 
 <!--Divide this section into two sub-sections:  One for your descriptive  results and one for your inferential results.!-->
 
+The null hypothesis is related so we don't reject the null hypothesis the alternative hypothesis is that they're not relate and they are not independent.
+
 ### Descriptive Results
+
+we use a barchart to show the difference between the people who believe it's too harsh,not enough or just about right for the death penalty.
+
 
 #### Graphical Descriptive Results
 
 <!--Graphical results here.  Make sure to show your code.  Provide appropriate labels for axes, giving units if possible, and provide a good title for the graph, too.  Use the graphical results to describe the patterns if any that exist in the data as focused toward the research question!-->
 
+```{r}
+barchartGC(~CAPPUN+COURTS, data=mydata2, type = "percent",xlab='view on CAPPUN',main='view on COURTS')
+
+```
+The barchart shows that over 60% of the people are in favor that the punishment is not harsh enough, 40% of the people oppose, about 30% of the people don't know, and about 40% dont have an answer. 15% of the people are in facor that it's just about right, about 20% oppose, about 25% don't know, and about 25% don't have an answer.
+
 #### Numerical Descriptive Results
 
 <!--Numerical results go here. Use the numerical results to describe the patterns if any that exist in the data as focused toward the research question!-->
+
+Numerical summary is a cross tabulation:
+
+```{r}
+xtabs(~CAPPUN+COURTS, data=mydata2)
+```
+The courts are in favor that it's not too harsh of a punishment and the capital punishment oppose that it is too harsh of a punishment.
 
 ### Inferential Results
 
 <!--State hypothesis clearly.  Make sure your discussion of the inferential test covers all the aspects that the test output produces, such as test statistic, p-value etc.  Make a decision about the null hypothesis, explain the assumptions on which the selected test/procedure was based, and why the chosen procedure satisfys the assumptions and is appropriate to answer the research question!-->
 
+```{r}
+chisqtestGC(~CAPPUN+COURTS, data=mydata2)
+votetab=xtabs(~CAPPUN+COURTS, data=mydata2)
+fisher.test(votetab)
+```
+
+We don't reject the null hypothesis
 
 # Discussion and Conclusion
 
 <!--Discussion and conclusion here.  If you found a relationship be sure to consider whether the relationship occurs because one of the variavbles causes the other, or whether they perhasps are related for some other reason.  Watch the chapter 6 videos from the GeorgeTown videos collection.!-->
+
+The surveys show that they are all related and we reject the null hypothesis since p is less than 0.05, p=0
 
